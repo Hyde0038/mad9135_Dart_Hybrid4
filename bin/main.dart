@@ -9,14 +9,15 @@ void main() async {
     if (resp.statusCode == 200) {
       var jsonResp = convert.jsonDecode(resp.body) as List<dynamic>;
       List<User> users = jsonResp.map((user) => User.fromJson(user)).toList();
+      users.sort((a, b) => a.firstName.compareTo(b.firstName));
 
       for (var user in users) {
         user.userOutput();
       }
     } else {
-      print('Failed to load users. ${resp.statusCode}');
+      print('Failed to load users: ${resp.statusCode}');
     }
   } catch (err) {
-    print('Failed http request $err');
+    print('Failed http request: $err');
   }
 }
