@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert' as convert;
+import 'package:dart_exercise4/user.dart';
 
 void main() async {
   var uri = Uri.parse('https://random-data-api.com/api/v2/users?size=12');
@@ -7,9 +8,15 @@ void main() async {
     final resp = await http.get(uri);
     if (resp.statusCode == 200) {
       var jsonResp = convert.jsonDecode(resp.body) as List<dynamic>;
-      print('User data: $jsonResp');
+      List<User> users = jsonResp.map((user) => User.fromJson(user)).toList();
+
+      for (var user in users) {
+        user.userOutput();
+      }
+    } else {
+      print('Failed to load users. ${resp.statusCode}');
     }
   } catch (err) {
-    print('Failed http request $uri');
+    print('Failed http request $err');
   }
 }
